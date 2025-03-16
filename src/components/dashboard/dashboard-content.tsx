@@ -10,8 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { WalletBalance } from "@/components/wallet/wallet-balance";
-import { WalletVerification } from "@/components/wallet/wallet-verification";
 import { formatCurrency } from "@/lib/utils";
 import { useAppContext } from "@/providers/app";
 
@@ -26,12 +24,6 @@ export function DashboardContent() {
           Overview of your Drift Protocol account and trading activity.
         </p>
       </div>
-
-      {!connected && (
-        <div className="mb-6">
-          <WalletBalance />
-        </div>
-      )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
@@ -58,8 +50,6 @@ export function DashboardContent() {
           description="Limit and stop orders"
         />
       </div>
-
-      <WalletVerification />
 
       <Tabs defaultValue="subaccounts">
         <TabsList>
