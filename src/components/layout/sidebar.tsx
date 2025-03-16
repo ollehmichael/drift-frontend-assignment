@@ -2,7 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/providers/app";
-import { Layers, LayoutDashboard, ListOrdered, Users } from "lucide-react";
+import {
+  Layers,
+  LayoutDashboard,
+  ListOrdered,
+  Users,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,6 +40,12 @@ export function Sidebar({ open }: SidebarProps) {
       icon: LayoutDashboard,
       href: "/",
       active: pathname === "/",
+    },
+    {
+      label: "Wallet Connection",
+      icon: Wallet,
+      href: "/wallet-verification",
+      active: pathname === "/wallet-verification",
     },
     {
       label: "Subaccounts",

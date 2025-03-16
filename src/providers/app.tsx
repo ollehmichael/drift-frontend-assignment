@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { createContext, useContext, useState } from "react"
-import { ThemeProvider } from "next-themes"
+import { useWallet } from "@solana/wallet-adapter-react";
+import { ThemeProvider } from "next-themes";
+import { createContext, useContext, useEffect, useState } from "react";
+import { SolanaWalletProvider } from "./solana-wallet";
 
 type AppContextType = {
-  connected: boolean
-  connecting: boolean
-  walletAddress: string | null
-  connect: () => void
-  disconnect: () => void
-  selectedSubaccount: string | null
-  setSelectedSubaccount: (id: string | null) => void
-}
+  connected: boolean;
+  connecting: boolean;
+  walletAddress: string | null;
+  connect: () => void;
+  disconnect: () => void;
+  selectedSubaccount: string | null;
+  setSelectedSubaccount: (id: string | null) => void;
+};
 
 const AppContext = createContext<AppContextType>({
   connected: false,
@@ -23,31 +25,49 @@ const AppContext = createContext<AppContextType>({
   disconnect: () => {},
   selectedSubaccount: null,
   setSelectedSubaccount: () => {},
-})
+});
 
-export const useAppContext = () => useContext(AppContext)
+export const useAppContext = () => useContext(AppContext);
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [connected, setConnected] = useState(false)
-  const [connecting, setConnecting] = useState(false)
-  const [walletAddress, setWalletAddress] = useState<string | null>(null)
-  const [selectedSubaccount, setSelectedSubaccount] = useState<string | null>(null)
+export function AppProviderContent({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const {
+    connected,
+    connecting,
+    publicKey,
+    select,
+    disconnect: walletDisconnect,
+    wallets,
+  } = useWallet();
+  const [selectedSubaccount, setSelectedSubaccount] = useState<string | null>(
+    null
+  );
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+
+  // Update wallet address when publicKey changes
+  useEffect(() => {
+    if (publicKey) {
+      setWalletAddress(publicKey.toString());
+    } else {
+      setWalletAddress(null);
+    }
+  }, [publicKey]);
 
   const connect = () => {
-    setConnecting(true)
-    // Simulate connection delay
-    setTimeout(() => {
-      setConnected(true)
-      setConnecting(false)
-      setWalletAddress("8xDrJGHyDXsQJj1F1nvZpCLhQEkxYfmAGQgJJPrxpPqd")
-    }, 1000)
-  }
+    // Find the first available wallet adapter
+    const firstWallet = wallets[0];
+    if (firstWallet) {
+      select(firstWallet.adapter.name);
+    }
+  };
 
   const disconnect = () => {
-    setConnected(false)
-    setWalletAddress(null)
-    setSelectedSubaccount(null)
-  }
+    walletDisconnect();
+    setSelectedSubaccount(null);
+  };
 
   return (
     <AppContext.Provider
@@ -65,6 +85,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         {children}
       </ThemeProvider>
     </AppContext.Provider>
-  )
+  );
 }
 
+export function AppProvider({ children }: { children: React.ReactNode }) {
+  return (
+    <SolanaWalletProvider>
+      <AppProviderContent>{children}</AppProviderContent>
+    </SolanaWalletProvider>
+  );
+}

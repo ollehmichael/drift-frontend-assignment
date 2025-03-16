@@ -10,11 +10,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAppContext } from "@/providers/app";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { Loader2, Wallet } from "lucide-react";
 
 export function ConnectWalletButton() {
-  const { connected, connecting, walletAddress, connect, disconnect } =
-    useAppContext();
+  const { connected, connecting, walletAddress, disconnect } = useAppContext();
+  const { setVisible } = useWalletModal();
+
+  const handleConnect = () => {
+    setVisible(true);
+  };
 
   if (connecting) {
     return (
@@ -54,7 +59,7 @@ export function ConnectWalletButton() {
   }
 
   return (
-    <Button onClick={connect}>
+    <Button onClick={handleConnect}>
       <Wallet className="mr-2 h-4 w-4" />
       Connect Wallet
     </Button>

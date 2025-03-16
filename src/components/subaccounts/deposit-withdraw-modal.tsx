@@ -154,7 +154,10 @@ export function DepositWithdrawModal({
               {amount && (
                 <div className="mt-2 flex justify-between text-sm font-medium">
                   <span>
-                    You will {type === "deposit" ? "deposit" : "receive"}
+                    You will{" "}
+                    {type === TransactionTypeEnum.DEPOSIT
+                      ? "deposit"
+                      : "withdraw"}
                   </span>
                   <span>
                     {type === TransactionTypeEnum.WITHDRAW

@@ -1,3 +1,5 @@
+"use client";
+
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { SubaccountsList } from "@/components/subaccounts/subaccounts-list";
 import {
@@ -8,9 +10,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { WalletBalance } from "@/components/wallet/wallet-balance";
+import { WalletVerification } from "@/components/wallet/wallet-verification";
 import { formatCurrency } from "@/lib/utils";
+import { useAppContext } from "@/providers/app";
 
 export function DashboardContent() {
+  const { connected } = useAppContext();
+
   return (
     <div className="space-y-6">
       <div>
@@ -19,6 +26,12 @@ export function DashboardContent() {
           Overview of your Drift Protocol account and trading activity.
         </p>
       </div>
+
+      {!connected && (
+        <div className="mb-6">
+          <WalletBalance />
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
@@ -46,6 +59,8 @@ export function DashboardContent() {
         />
       </div>
 
+      <WalletVerification />
+
       <Tabs defaultValue="subaccounts">
         <TabsList>
           <TabsTrigger value="subaccounts">Subaccounts</TabsTrigger>
@@ -64,9 +79,15 @@ export function DashboardContent() {
             </CardHeader>
             <CardContent>
               <div className="rounded-md border">
-                <div className="p-4 text-center text-sm text-muted-foreground">
-                  Connect your wallet to view recent activity
-                </div>
+                {!connected ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    Connect your wallet to view recent activity
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    No recent activity found
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
