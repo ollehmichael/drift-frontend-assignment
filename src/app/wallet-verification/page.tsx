@@ -38,15 +38,6 @@ export default function WalletVerificationPage() {
                 </code>
               </li>
             </ol>
-
-            <div className="mt-6 rounded-md border p-4 bg-muted/50">
-              <h3 className="font-semibold mb-2">Coming in Next Steps</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm">
-                <li>Drift API integration</li>
-                <li>Viewing subaccounts, balances, and positions</li>
-                <li>Testing wallet connection with Drift Protocol</li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
