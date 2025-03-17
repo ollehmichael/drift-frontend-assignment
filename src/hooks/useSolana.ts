@@ -33,12 +33,10 @@ export function useSolana() {
     }
   }, [connection, publicKey]);
 
-  // Fetch balance when wallet is connected
   useEffect(() => {
     getBalance();
   }, [getBalance, publicKey]);
 
-  // Send SOL to another wallet
   const sendSol = async (recipient: string, amount: number) => {
     if (!publicKey) return { success: false, message: "Wallet not connected" };
 
@@ -46,7 +44,6 @@ export function useSolana() {
       setIsLoading(true);
       const recipientPubKey = new PublicKey(recipient);
       const transaction = new Transaction().add(
-        // Create a transfer instruction
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: recipientPubKey,
@@ -54,13 +51,7 @@ export function useSolana() {
         })
       );
 
-      // Send the transaction
       const signature = await sendTransaction(transaction, connection);
-
-      // Wait for confirmation
-      await connection.confirmTransaction(signature, "confirmed");
-
-      // Refresh balance
       await getBalance();
 
       return { success: true, signature };

@@ -6,6 +6,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { ThemeProvider } from "next-themes";
 import { createContext, useContext, useEffect, useState } from "react";
 import { SolanaWalletProvider } from "./solana-wallet";
+import { SubaccountStoreProvider } from "./subaccount-store";
 
 type AppContextType = {
   connected: boolean;
@@ -98,7 +99,9 @@ export function AppProviderContent({
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <SolanaWalletProvider>
-      <AppProviderContent>{children}</AppProviderContent>
+      <SubaccountStoreProvider>
+        <AppProviderContent>{children}</AppProviderContent>
+      </SubaccountStoreProvider>
     </SolanaWalletProvider>
   );
 }

@@ -19,17 +19,13 @@ import {
 import { clusterApiUrl } from "@solana/web3.js";
 import { useMemo, type ReactNode } from "react";
 
-// Import the required CSS for the wallet modal
 import "@solana/wallet-adapter-react-ui/styles.css";
 
 export function SolanaWalletProvider({ children }: { children: ReactNode }) {
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'
   const network = WalletAdapterNetwork.Mainnet;
 
-  // You can also provide a custom RPC endpoint
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  // @solana/wallet-adapter-wallets includes all the adapters but supports tree shaking and lazy loading
   const wallets = useMemo(
     () => [
       new PhantomWalletAdapter(),

@@ -1,13 +1,13 @@
-import { ArrowDownRight, ArrowUpRight } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { cn } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 
 interface StatsCardProps {
-  title: string
-  value: string
-  description: string
-  trend?: number
-  trendType?: "positive" | "negative" | "neutral"
+  title: string;
+  value: string;
+  description: string;
+  trend?: number;
+  trendType?: "positive" | "negative" | "neutral";
 }
 
 export function StatsCard({
@@ -30,7 +30,7 @@ export function StatsCard({
             className={cn(
               "mt-2 flex items-center text-xs",
               trendType === "positive" && "text-success",
-              trendType === "negative" && "text-destructive",
+              trendType === "negative" && "text-destructive"
             )}
           >
             {trendType === "positive" ? (
@@ -43,6 +43,5 @@ export function StatsCard({
         )}
       </CardContent>
     </Card>
-  )
+  );
 }
-

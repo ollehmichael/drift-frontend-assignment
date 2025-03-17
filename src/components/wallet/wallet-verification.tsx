@@ -34,32 +34,10 @@ export function WalletVerification() {
   }>({ status: "idle" });
   const [isMounted, setIsMounted] = useState(false);
 
-  // Set isMounted to true when component mounts on client
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Log wallet connection status changes
-  useEffect(() => {
-    if (!isMounted) return;
-
-    console.log("Wallet connection status:", {
-      connected: wallet.connected,
-      connecting: wallet.connecting,
-      disconnecting: wallet.disconnecting,
-      publicKey: wallet.publicKey?.toString(),
-      walletName: wallet.wallet?.adapter.name,
-    });
-  }, [
-    isMounted,
-    wallet.connected,
-    wallet.connecting,
-    wallet.disconnecting,
-    wallet.publicKey,
-    wallet.wallet,
-  ]);
-
-  // Fetch wallet balance when connected
   useEffect(() => {
     if (!isMounted) return;
 
@@ -70,10 +48,6 @@ export function WalletVerification() {
       if (!wallet.publicKey) return;
 
       try {
-        console.log("Fetching balance for:", wallet.publicKey.toString());
-
-        // Use a direct connection to a reliable RPC endpoint
-        // This helps avoid issues with the default connection
         const devnetConnection = clusterApiUrl("devnet");
         const response = await fetch(devnetConnection, {
           method: "POST",
@@ -136,8 +110,6 @@ export function WalletVerification() {
     setError(null);
 
     try {
-      // In a real implementation, we might fetch some basic data to confirm it exists
-      // For now, just set the address to view in the app context
       setViewAddress(inputAddress);
     } catch (err) {
       setError("Failed to validate address");

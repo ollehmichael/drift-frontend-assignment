@@ -12,9 +12,41 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatCurrency } from "@/lib/utils";
 import { useAppContext } from "@/providers/app";
+import { useEffect, useState } from "react";
 
 export function DashboardContent() {
   const { connected } = useAppContext();
+  const [driftUser, setDriftUser] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchDriftData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch("/api/drift");
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || "Failed to fetch Drift data");
+        }
+
+        setDriftUser(data.data);
+        console.log("ATTENTION", data);
+      } catch (error) {
+        console.error("Error fetching Drift data:", error);
+        setError("Failed to fetch Drift data. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (connected) {
+      fetchDriftData();
+    }
+  }, [connected]);
 
   return (
     <div className="space-y-6">
@@ -24,6 +56,18 @@ export function DashboardContent() {
           Overview of your Drift Protocol account and trading activity.
         </p>
       </div>
+
+      {error && (
+        <div className="rounded-md bg-destructive/15 p-4">
+          <p className="text-sm text-destructive">{error}</p>
+        </div>
+      )}
+
+      {loading && (
+        <div className="rounded-md bg-muted p-4">
+          <p className="text-sm text-muted-foreground">Loading Drift data...</p>
+        </div>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard

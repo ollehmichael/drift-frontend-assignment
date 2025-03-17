@@ -2,15 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  output: "standalone",
-  webpack: (config) => {
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      os: false,
-      path: false,
-      crypto: false,
-    };
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        os: false,
+        path: false,
+        net: false,
+        tls: false,
+      };
+    }
+
     return config;
   },
 };
